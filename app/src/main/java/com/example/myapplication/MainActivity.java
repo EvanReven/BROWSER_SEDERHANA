@@ -3,6 +3,8 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.regex.Pattern;
 import android.graphics.Bitmap;
+import android.app.Activity;
+import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -38,20 +40,23 @@ ProgressBar progressBar;
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
 
-        webView.setWebViewClient(new WebViewClient());
-webView.setWebChromeClient(new WebChromeClient(){
-    @Override
-    public void onProgressChanged(WebView view, int newProgress) {
-        super.onProgressChanged(view, newProgress);
-        progressBar.setProgress(newProgress);
-    }
-});
-loadMyUrl("google.com");
+        webView.setWebViewClient(new MyWebViewClient());
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                progressBar.setProgress(newProgress);
+            }
+        });
+loadMyUrl("bing.com");
 urlinput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
         if (i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_DONE ) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(urlinput.getWindowToken(),0);
             loadMyUrl(urlinput.getText().toString());
+
             return true;
         }
         return false;
@@ -71,7 +76,7 @@ clearUrl.setOnClickListener(new View.OnClickListener() {
         if (matchUrl){
             webView.loadUrl(url);
         }else {
-            webView.loadUrl("google.com/search?q="+url);
+            webView.loadUrl("bing.com/search?q="+url);
         }
     }
 //    fungsi tombol back
@@ -95,6 +100,7 @@ clearUrl.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            urlinput.setText(webView.getUrl());
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -104,4 +110,5 @@ clearUrl.setOnClickListener(new View.OnClickListener() {
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
+
 }
