@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.regex.Pattern;
 import android.graphics.Bitmap;
 import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
